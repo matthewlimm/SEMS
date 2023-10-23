@@ -1,49 +1,49 @@
 import Adafruit_BMP.BMP085 as BMP085
-import matplotlib.pyplot as plt
 import csv
+import time
 
+# Function to read BMP180 data
+def read_bmp180_data():
+    sensor = BMP085.BMP085()
+    temperature = sensor.read_temperature()
+    pressure = sensor.read_pressure()
+    return temperature, pressure
 
+# Function to calculate altitude
+def calculate_altitude(pressure, sea_level_pressure=101325.0):
+    altitude = 44330.0 * (1.0 - (pressure / sea_level_pressure) ** 0.1903)
+    return altitude
 
-# Create a BMP180 sensor instance
-sensor = BMP085.BMP085()
+# Function to write data to a CSV file
+def write_to_csv(filename, data):
+    with open(filename, 'a', newline='') as csvfile:
+        csv_writer = csv.writer(csvfile)
+        csv_writer.writerow(data)
 
-# Read temperature and pressure data
-temperature = sensor.read_temperature()
-pressure = sensor.read_pressure()
-
-# Calculate altitude
-# The following formula is a simple approximation and may not be accurate for all locations.
-# You may need to adjust it according to your specific requirements.
-altitude = sensor.read_altitude()
-
-# Print the data
-print(f"Temperature: {temperature} °C")
-print(f"Pressure: {pressure} Pa")
-print(f"Altitude: {altitude} meters")
-
-# Perform your data analysis here, e.g., store data, plot it, etc.
-# You can use libraries like matplotlib for data visualization and analysis.
-
-# Example: Saving data to a CSV file
-
-data = {'Temperature (°C)': temperature, 'Pressure (Pa)': pressure, 'Altitude (m)': altitude}
-with open('bmp180_data.csv', 'w', newline='') as csv_file:
-    writer = csv.DictWriter(csv_file, fieldnames=data.keys())
-    writer.writeheader()
-    writer.writerow(data)
-
-# Example: Plotting data using matplotlib
-
-# You'll need to collect and store data over time for meaningful plotting.
-# Here's a simple example to get you started.
-temperature_data = [temperature]
-pressure_data = [pressure]
-altitude_data = [altitude]
-
-# Plot temperature over time
-plt.plot(temperature_data, label='Temperature (°C)')
-plt.xlabel('Time')
-plt.ylabel('Temperature (°C)')
-plt.legend()
-plt.show()
-
+if __name__ == "__main__":
+    # Define the CSV file name
+    csv_filename = "bmp180_data.csv"
+   
+    # You can adjust this value to match your location
+    sea_level_pressure = 101325.0
+   
+    try:
+        while True:
+            temperature, pressure = read_bmp180_data()
+            altitude = calculate_altitude(pressure, sea_level_pressure)
+           
+            # Get the current timestamp
+            timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
+           
+            # Create a list of data to write to the CSV file
+            data_to_write = [timestamp, temperature, pressure, altitude]
+           
+            write_to_csv(csv_filename, data_to_write)
+           
+            print(f"Timestamp: {timestamp}, Temperature: {temperature} °C, Pressure: {pressure} Pa, Altitude: {altitude} meters")
+           
+            # Wait for a specified interval (e.g., 5 seconds)
+            time.sleep(5)
+   
+    except KeyboardInterrupt:
+        print("Data collection stopped.")
