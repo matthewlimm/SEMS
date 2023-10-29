@@ -247,7 +247,7 @@ satellite_dropdown = dcc.Dropdown(
 )
 
 satellite_dropdown_text = html.P(
-    id="satellite-dropdown-text", children=["Smart Enviromental", html.Br(), " Monitoring Sensor"]
+    id="satellite-dropdown-text", children=["Smart Enviromental", html.Br(), " Monitoring Sensors"]
 )
 
 satellite_title = html.H1(id="satellite-name", children="")
