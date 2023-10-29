@@ -5,9 +5,12 @@ from random import random
 from threading import Lock
 from datetime import datetime
 from dht22_module import DHT22Module
+from gmc320s_module import GMC320SModule
 import board
+import time
 
 dht22_module = DHT22Module(board.D4)
+gmc320s_module = GMC320SModule()
 
 thread = None
 thread_lock = Lock()
@@ -20,18 +23,20 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 Background Thread
 """
 
-
 def background_thread():
     while True:
-        temperature, humidity = dht22_module.get_sensor_readings()
+        ts  = time.strftime("%l:%M:%S")
+        #temperature, humidity = dht22_module.get_sensor_readings()
+        cpm = gmc320s_module.get_sensor_readings()
         sensor_readings = {
-            "temperature": temperature,
-            "humidity": humidity,
+            "temperature": 0,
+            "humidity": 0,
+            #"cpm": cpm,
         }
         sensor_json = json.dumps(sensor_readings)
 
         socketio.emit("updateSensorData", sensor_json)
-        socketio.sleep(3)
+        socketio.sleep(1)
 
 
 """

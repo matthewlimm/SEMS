@@ -38,6 +38,9 @@ var temperatureLayout = {
   //   width: 450,
   //   height: 260,
   margin: { t: 30, b: 20, l: 30, r: 20, pad: 0 },
+  xaxis: {
+    automargin: true,
+  },
 };
 var humidityLayout = {
   autosize: true,
@@ -52,6 +55,10 @@ var humidityLayout = {
   //   width: 450,
   //   height: 260,
   margin: { t: 30, b: 20, l: 30, r: 20, pad: 0 },
+  xaxis: {
+    automargin: true,
+    
+  },
 };
 var config = { responsive: true };
 
@@ -161,7 +168,7 @@ function updateCharts(lineChartDiv, xArray, yArray, sensorRead) {
   if (yArray.length >= MAX_GRAPH_POINTS) {
     yArray.shift();
   }
-  xArray.push(ctr++);
+  xArray.push(time);
   yArray.push(sensorRead);
 
   var data_update = {
