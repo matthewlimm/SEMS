@@ -6,13 +6,20 @@ from threading import Lock
 from datetime import datetime
 from dht22_module import DHT22Module
 from gmc320s_module import GMC320SModule
+#from mics5524_module import MICS5524Module
+from ltr390_module import LTR390Module
 import board
 import time
 
 dht22_module = DHT22Module(board.D4)
 gmc320s_module = GMC320SModule()
+#mics5524_module = MICS5524Module()
+ltr390_module = LTR390Module()
 
-thread = None
+#modules = [dht22_module, gmc320s_module]
+# https://learn.adafruit.com/raspberry-pi-iot-dashboard-with-azure-and-circuitpython
+
+thread = None     
 thread_lock = Lock()
 
 app = Flask(__name__)
@@ -28,13 +35,14 @@ def background_thread():
         ts  = time.strftime("%l:%M:%S")
         #temperature, humidity = dht22_module.get_sensor_readings()
         cpm = gmc320s_module.get_sensor_readings()
+        #co2 = mics5524_module.get_sensor_readings()
+        uv = ltr390_module.get_sensor_readings()
         sensor_readings = {
-            "temperature": 0,
-            "humidity": 0,
+            "temperature": uv,
+            "humidity": 69,
             #"cpm": cpm,
         }
         sensor_json = json.dumps(sensor_readings)
-
         socketio.emit("updateSensorData", sensor_json)
         socketio.sleep(1)
 

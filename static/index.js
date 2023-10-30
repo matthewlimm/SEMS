@@ -41,6 +41,9 @@ var temperatureLayout = {
   xaxis: {
     automargin: true,
   },
+  yaxis: {
+    automargin: true,
+  },
 };
 var humidityLayout = {
   autosize: true,
@@ -57,7 +60,9 @@ var humidityLayout = {
   margin: { t: 30, b: 20, l: 30, r: 20, pad: 0 },
   xaxis: {
     automargin: true,
-    
+  },
+  yaxis: {
+    automargin: true,
   },
 };
 var config = { responsive: true };
