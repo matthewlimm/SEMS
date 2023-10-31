@@ -9,6 +9,7 @@ from dash import html
 from dash.dependencies import State, Input, Output
 import dash_daq as daq
 
+
 app = dash.Dash(
     __name__,
     meta_tags=[
