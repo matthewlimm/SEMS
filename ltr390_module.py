@@ -18,7 +18,7 @@ class LTR390Module:
             try:
                 print("UV:", ltr.uvs, "\t\tAmbient Light:", ltr.light)
                 print("UV Index:", ltr.uvi, "\t\tLux:", ltr.lux)
-                return ltr.uvs 
+                return ltr.lux 
 
             except RuntimeError as error:
                 # Errors happen fairly often, DHT's are hard to read, just keep going

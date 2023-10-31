@@ -14,7 +14,7 @@ import serial                                   # communication with serial port
 import serial.tools.list_ports                  # allows listing of serial ports
 
 # my settings
-my_port      = '/dev/ttyUSB1'                   # likely USB/Serial port on Linux
+my_port      = '/dev/ttyUSB0'                   # likely USB/Serial port on Linux
 my_baudrate  = 115200                            # GMC-320S is 115200
 ser = serial.Serial(my_port, my_baudrate)       # open serial port
 
