@@ -9,13 +9,14 @@ from gmc320s_module import GMC320SModule
 from ltr390_module import LTR390Module
 from mq135_module import MQ135Module
 import board
-import time
+import datetime
 import random
+import csv
 
 dht22_module = DHT22Module(board.D4) # temperature and humidity
 gmc320s_module = GMC320SModule() # radiation
 ltr390_module = LTR390Module() # uv, lux
-mq135_module = MQ135Module() # gas
+mq135_module = MQ135Module() # aqi
 
 # modules = [dht22_module, gmc320s_module]
 # https://learn.adafruit.com/raspberry-pi-iot-dashboard-with-azure-and-circuitpython
@@ -31,20 +32,33 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 Background Thread
 """
 def background_thread():
+    filename = "data.csv"
+    csv = open(filename, 'w')
+    csv.write('date,temperature,humidity,uv,lux,cpm,aqi\n')
+    csv.close
+
     while True:
-        #for module in modules:
-        ts  = time.strftime("%l:%M:%S")
-        temperature, humidity = dht22_module.get_sensor_readings()
-        uv, lux = ltr390_module.get_sensor_readings()
-        cpm = gmc320s_module.get_sensor_readings()
-        aqi = mq135_module.get_sensor_readings()
-        sensor_readings = {
-            "temperature": aqi,
-            "humidity": 69,
-        }
-        sensor_json = json.dumps(sensor_readings)
-        socketio.emit("updateSensorData", sensor_json)
-        socketio.sleep(1)
+            #for module in modules:
+            now = datetime.datetime.now()
+            temperature, humidity = dht22_module.get_sensor_readings()
+            uv, lux = ltr390_module.get_sensor_readings()
+            cpm = gmc320s_module.get_sensor_readings()
+            aqi = mq135_module.get_sensor_readings()
+
+            data = str(now.time()) + "," + str(temperature) + "," + str(humidity) + "," + str(uv) + "," + str(lux) + "," + str(cpm) + "," + str(aqi)
+            csv = open(filename, 'a')
+            try:
+                csv.write(data+'\n')
+            finally:
+                csv.close()
+
+            sensor_readings = {
+                "temperature": aqi,
+                "humidity": 69,
+            }
+            sensor_json = json.dumps(sensor_readings)
+            socketio.emit("updateSensorData", sensor_json)
+            socketio.sleep(1)
 
 """
 Serve root index file
