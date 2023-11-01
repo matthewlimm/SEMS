@@ -13,8 +13,8 @@ import time
 import random
 
 dht22_module = DHT22Module(board.D4) # temperature and humidity
-ltr390_module = LTR390Module() # uv, lux, etc.
 gmc320s_module = GMC320SModule() # radiation
+ltr390_module = LTR390Module() # uv, lux
 mq135_module = MQ135Module() # gas
 
 # modules = [dht22_module, gmc320s_module]
@@ -37,9 +37,9 @@ def background_thread():
         temperature, humidity = dht22_module.get_sensor_readings()
         uv, lux = ltr390_module.get_sensor_readings()
         cpm = gmc320s_module.get_sensor_readings()
-        ppm = mq135_module.get_sensor_readings()
+        aqi = mq135_module.get_sensor_readings()
         sensor_readings = {
-            "temperature": ppm,
+            "temperature": aqi,
             "humidity": 69,
         }
         sensor_json = json.dumps(sensor_readings)
