@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SEMS Dashboard</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+    <script
+      src="https://cdn.plot.ly/plotly-2.20.0.min.js"
+      charset="utf-8"
+    ></script>
+    <link href="../static/index.css" rel="stylesheet" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"
+      integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ=="
+      crossorigin="anonymous"
+    ></script>
+</head>
+  <body>
+    <header>
+      <!-- Fixed navbar -->
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">SEMS Dashboard</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarCollapse"
+            aria-controls="navbarCollapse"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+              <li class="nav-item">
+                <a href="index.html" class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a href="about.html" class="nav-link" href="#">About</a>
+              </li>
+              <li class="nav-item">
+                <a href="sensors.html" class="nav-link" href="#">Sensors</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div class="container-fluid content mt-5">
+      <div class="row">
+        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="row">
+              <div
+                class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom border-danger"
+              >
+              </div>
+            </div>
+            <div class="row">
+                <h1 class="h2 text-danger">
+                    MQ135 Sensor 
+                </h1>
+                <p>
+                    The MQ135 is a gas sensor that will be used for the SEMS will detect chemicals such as oxygen, carbon dioxide, carbon monoxide, 
+                    nitrogen dioxide, and sulfur dioxide. The specific gas sensor that we will be using is an infrared gas sensor, which will measure 
+                    the absorption of infrared radiation by analyzing the presence of different gas molecules. Gas molecules have distinct absorption 
+                    spectra, and by looking at how much infrared light is absorbed by the gas, which will allow us to determine the specific concentration 
+                    of the gas.
+                </p>
+                <p>
+                    The gas sensors are of high importance as in medical rooms, they can guarantee patient safety. Potential gasses that can be detected in 
+                    medical rooms include anesthetic gasses that have concentrations of nitrogen dioxide or sulfur dioxide. Furthermore, oxygen in operation 
+                    rooms and critical care areas need to be monitored as it needs to remain at an appropriate level for patients who may suffer from respiratory 
+                    issues. In regards to areas where diseases are easily exposed, gas sensors will be useful in that a certain level of oxygen must be maintained 
+                    in order to prevent the spread of airborne pathogens.
+                </p>
+                <p>
+                    Sensing Material: The MQ-135 sensor contains a sensing material or a sensitive layer that is typically composed of a tin dioxide (SnO2) 
+                    semiconductor. This sensing material has a high surface area and is sensitive to a wide range of gasses.
+                </p>
+                <p>
+                    Gas Interaction: When the MQ-135 sensor is exposed to the surrounding air, gas molecules in the environment interact with the sensing 
+                    material. Different gasses have unique chemical interactions with the SnO2 material, causing a change in the electrical conductivity of 
+                    the material. This change is often due to the alteration of charge carriers (electrons) in the sensing material.
+
+                </p>
+                <p>
+                    Output Signal: The voltage output from the MQ-135 sensor will be ready by our microcontroller to determine the concentration of the 
+                    target gas based on the resistance change and calibration data. 
+
+                </p>
+                <h1 class="h2 text-danger">
+                    GMC Sensor 
+                </h1>
+                <p>
+                    The Geiger Nuclear Radiation Detector measures the radiation level, which will function by detecting and measuring ionizing radiation. 
+                    This detector will serve the purpose of rapid detection of ionizing radiation, but does not necessarily have the ability to distinguish 
+                    between alpha, beta, and gamma radiation, even though this should not pose a problem for the intended application of our product.
+                </p>
+                <p>
+                    Gas-Filled Tube: The core component of a Geiger counter is a gas-filled tube. The gas used is typically a low-pressure inert gas, such as argon, neon, or helium. 
+                </p>
+                <p>
+                    Anode and Cathode: Inside the tube, there are two electrodes: an anode (positively charged) and a cathode (negatively charged). These electrodes are separated 
+                    by the gas-filled region. A high voltage, typically in the range of 300 to 700 volts, is applied between the anode and cathode. This voltage creates an electric 
+                    field within the gas-filled tube.
+                </p>
+                <p>
+                    Indicators: The electrical discharge produced by the ionization events is detected and amplified by the Geiger-Muller tube. This electrical signal is typically 
+                    audible as a series of clicks or beeps and may also be used to trigger a visual indicator, such as a needle on a meter or a digital readout, to display the radiation 
+                    level. Each click or pulse corresponds to a single ionization event, and the rate of these clicks is directly proportional to the intensity of the radiation.
+                </p>
+                <h1 class="h2 text-danger">
+                    DHT22 Sensor 
+                </h1>
+                <p>
+                    The temperature and humidity sensor will detect what the ideal levels will be for patient comfort. Furthermore, maintaining a proper 
+                    temperature can ensure that there is no significant spread of pathogens and that medications are stored in a way that 
+                    ensures they can be used in the long-term.
+                </p>
+                <p>
+                    Sensing Element: Inside the DHT22 sensor, there is a sensing element that is made of a moisture-sensitive organic material. This element 
+                    changes its electrical resistance in response to changes in temperature and humidity.
+                </p>
+                <p>
+                    Capacitive Element: The DHT22 uses a capacitive humidity sensor to measure the relative humidity. When the humidity changes, it causes 
+                    the capacitance of the sensor to change as well. The sensor has two electrodes, and the capacitance between them varies with humidity. 
+                    A change in capacitance corresponds to a change in relative humidity.
+                </p>
+                <p>
+                    Temperature Element: In addition to humidity, the DHT22 has a built-in NTC (Negative Temperature Coefficient) thermistor to measure temperature. 
+                    The resistance of the thermistor decreases as the temperature increases. By measuring the resistance, the sensor can determine the temperature.
+                </p>
+                <p>
+                    Signal Conditioning: The DHT22 sensor includes an onboard microcontroller that converts the resistance and capacitance measurements into digital 
+                    signals. It also performs signal processing and calibration. The microcontroller is factory-calibrated, which means the sensor is ready to provide 
+                    accurate temperature and humidity readings without the need for user calibration.
+
+                </p>
+                <h1 class="h2 text-danger">
+                    LTR390-UV Sensor 
+                </h1>
+                <p>
+                    The UV sensors would be used in devices like UV-C disinfection robots and UV-C room sterilizers to control the spread of 
+                    infections in healthcare facilities. And in a similar vein, UV sensors help ensure that the correct dosage of UV radiation is applied, 
+                    preventing the transmission of infections through these medical procedures. In dental and orthopedic applications, UV sensors are used 
+                    to monitor the UV curing process of resins and adhesives, ensuring that the materials set and harden correctly in dental fillings, 
+                    orthodontic appliances, and other medical devices.
+                </p>
+                <p>
+                    Light Absorption and Photocurrent: When light, whether in the visible or UV spectrum, falls on the sensor, it is absorbed by the photodiodes. 
+                    The absorbed light energy generates electron-hole pairs within the photodiode material.
+                </p>
+                <p>
+                    Signal Conditioning: The LTR390-UV sensor includes signal conditioning circuitry to convert the generated photocurrents into electrical 
+                    voltage signals. These voltage signals are then processed and converted into digital data. 
+                </p>
+                <p>
+                    Visible Light Sensing: The visible light photodiode can measure the intensity of visible light, making it useful for applications like ambient 
+                    light sensing for displays or adjusting the brightness of screens and displays based on the surrounding light conditions. 
+                </p>
+            </div>
+        </div>
+      </div>
+    </div>
+    <footer class="footer mt-auto py-3 bg-dark">
+        <div class="container text-center">
+          <span class="text-white">&copy;2023 Alpha Theta Pledge Class</span>
+        </div>
+      </footer>
+  </body>
+  
