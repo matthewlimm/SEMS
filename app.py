@@ -57,19 +57,36 @@ def background_thread():
             finally:
                 csv.close()
 
-            if temperature is not None or humidity is not None or uv is not None or lux is not None or cpm is not None or aqi is not None or apl is not None:
+            if temperature is not None or humidity is not None:
                 sensor_readings = {
                     "id": sensor.get_id(),
                     "temperature": temperature,
                     "humidity": humidity,
-                    "uv": uv,
-                    "lux": lux,
-                    "cpm": cpm,
-                    "aqi": aqi,
-                    "apl": apl,
                 }
                 socketio.emit("updateSensorData", json.dumps(sensor_readings))
-                socketio.sleep(.5)
+                socketio.sleep(.1)
+            if uv is not None or lux is not None:
+                sensor_readings = {
+                    "id": sensor.get_id(),
+                    "uv": uv,
+                    "lux": lux,
+                }
+                socketio.emit("updateSensorData", json.dumps(sensor_readings))
+                socketio.sleep(.1)
+            if cpm is not None:
+                sensor_readings = {
+                    "id": sensor.get_id(),
+                    "cpm": cpm,
+                }
+                socketio.emit("updateSensorData", json.dumps(sensor_readings))
+                socketio.sleep(.1)
+            if aqi is not None or apl is not None:
+                sensor_readings = {
+                    "id": sensor.get_id(),
+                    "aqi": aqi,
+                }
+                socketio.emit("updateSensorData", json.dumps(sensor_readings))
+                socketio.sleep(.1)
 
 """
 Serve root index file
