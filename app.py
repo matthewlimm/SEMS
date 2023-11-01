@@ -37,8 +37,9 @@ def background_thread():
         temperature, humidity = dht22_module.get_sensor_readings()
         uv, lux = ltr390_module.get_sensor_readings()
         cpm = gmc320s_module.get_sensor_readings()
+        ppm = mq135_module.get_sensor_readings()
         sensor_readings = {
-            "temperature": cpm,
+            "temperature": ppm,
             "humidity": 69,
         }
         sensor_json = json.dumps(sensor_readings)
