@@ -1,31 +1,109 @@
-// // Import the functions you need from the SDKs you need
-// import { initializeApp } from "firebase/app";
-// import { getAnalytics } from "firebase/analytics";
-// // TODO: Add SDKs for Firebase products that you want to use
-// // https://firebase.google.com/docs/web/setup#available-libraries
+// Temperature
+let newTempXArray = [];
+let newTempYArray = [];
+// Humidity
+let newHumidityXArray = [];
+let newHumidityYArray = [];
 
-// // Your web app's Firebase configuration
-// // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-// const firebaseConfig = {
-//   apiKey: "AIzaSyAT3TKqTwfpeUfICN7PaVwMmPpWRmTTvUw",
-//   authDomain: "engineering-be843.firebaseapp.com",
-//   projectId: "engineering-be843",
-//   storageBucket: "engineering-be843.appspot.com",
-//   messagingSenderId: "813909430707",
-//   appId: "1:813909430707:web:187ccdccf7a96c6ae3bbc6",
-//   measurementId: "G-X0JB8FPHQQ"
-// };
+// The maximum number of data points displayed on our scatter/line graph
+let MAX_GRAPH_POINTS = 12;
+let ctr = 0;
 
-// // Initialize Firebase
-// const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
+var currentTab = 1;
+var numberOfDHTSensor = 3;
+const TEMPERATURE_CHART_DIV = 0;
+const HUMIDITY_CHART_DIV = 1;
 
+window.addEventListener("load", (event) => {
+  console.log("Page is ready!");
+  numberOfDHTSensor = parseInt(document.querySelector("#sensorCount").value);
+  drawCharts();
+});
 
-var temperatureHistoryDiv = document.getElementById("temperature-history");
-var humidityHistoryDiv = document.getElementById("humidity-history");
+function drawCharts() {
+  for (let index = 1; index <= numberOfDHTSensor; index++) {
+    let temperatureHistoryDiv = document.getElementById(
+      `temperature-history-${index}`
+    );
+    let humidityHistoryDiv = document.getElementById(
+      `humidity-history-${index}`
+    );
+    let temperatureGaugeDiv = document.getElementById(
+      `temperature-gauge-${index}`
+    );
+    let humidityGaugeDiv = document.getElementById(`humidity-gauge-${index}`);
 
-var temperatureGaugeDiv = document.getElementById("temperature-gauge");
-var humidityGaugeDiv = document.getElementById("humidity-gauge");
+    Plotly.newPlot(
+      temperatureHistoryDiv,
+      [temperatureTrace],
+      temperatureLayout,
+      graphConfig
+    );
+    Plotly.newPlot(
+      humidityHistoryDiv,
+      [humidityTrace],
+      humidityLayout,
+      graphConfig
+    );
+
+    Plotly.newPlot(temperatureGaugeDiv, temperatureData, layout, graphConfig);
+    Plotly.newPlot(humidityGaugeDiv, humidityData, layout, graphConfig);
+  }
+}
+
+function resetCharts() {
+  for (let index = 1; index <= numberOfDHTSensor; index++) {
+    let temperatureHistoryDiv = document.getElementById(
+      `temperature-history-${index}`
+    );
+    let humidityHistoryDiv = document.getElementById(
+      `humidity-history-${index}`
+    );
+    let temperatureGaugeDiv = document.getElementById(
+      `temperature-gauge-${index}`
+    );
+    let humidityGaugeDiv = document.getElementById(`humidity-gauge-${index}`);
+
+    let temp_data_update = {
+      x: [newTempXArray],
+      y: [newTempYArray],
+    };
+    let humidity_data_update = {
+      x: [newHumidityXArray],
+      y: [newHumidityYArray],
+    };
+
+    Plotly.update(temperatureHistoryDiv, temp_data_update);
+    Plotly.update(humidityHistoryDiv, humidity_data_update);
+
+    var temperature_gauge_update = {
+      value: 0,
+    };
+    var humidity_gauge_update = {
+      value: 0,
+    };
+
+    Plotly.update(temperatureGaugeDiv, temperature_gauge_update);
+    Plotly.update(humidityGaugeDiv, humidity_gauge_update);
+  }
+}
+
+// Initialize the tabs
+tabLinks = document.querySelectorAll(".nav-link");
+
+tabLinks.forEach(function (tab) {
+  tab.addEventListener("click", function (e) {
+    console.log(e.target.dataset.tabNumber);
+    currentTab = parseInt(e.target.dataset.tabNumber);
+    // Clear Temperature and Humidity Array
+    newTempXArray = [];
+    newTempYArray = [];
+    newHumidityXArray = [];
+    newHumidityYArray = [];
+
+    resetCharts();
+  });
+});
 
 var graphConfig = {
   displayModeBar: false,
@@ -49,7 +127,7 @@ var humidityTrace = {
 };
 
 var temperatureLayout = {
-  autosize: true,
+  autosize: false,
   title: {
     text: "Temperature",
   },
@@ -58,18 +136,12 @@ var temperatureLayout = {
     color: "#7f7f7f",
   },
   colorway: ["#B22222"],
-  //   width: 450,
-  //   height: 260,
+  width: 320,
+  height: 260,
   margin: { t: 30, b: 20, l: 30, r: 20, pad: 0 },
-  xaxis: {
-    automargin: true,
-  },
-  yaxis: {
-    automargin: true,
-  },
 };
 var humidityLayout = {
-  autosize: true,
+  autosize: false,
   title: {
     text: "Humidity",
   },
@@ -78,30 +150,11 @@ var humidityLayout = {
     color: "#7f7f7f",
   },
   colorway: ["#00008B"],
-  //   width: 450,
-  //   height: 260,
+  width: 320,
+  height: 260,
   margin: { t: 30, b: 20, l: 30, r: 20, pad: 0 },
-  xaxis: {
-    automargin: true,
-  },
-  yaxis: {
-    automargin: true,
-  },
 };
 var config = { responsive: true };
-
-Plotly.newPlot(
-  temperatureHistoryDiv,
-  [temperatureTrace],
-  temperatureLayout,
-  graphConfig
-);
-Plotly.newPlot(
-  humidityHistoryDiv,
-  [humidityTrace],
-  humidityLayout,
-  graphConfig
-);
 
 // Gauge Data
 var temperatureData = [
@@ -150,53 +203,44 @@ var humidityData = [
   },
 ];
 
-var layout = { width: 350, height: 250, margin: { t: 0, b: 0, l: 0, r: 0 } };
+var layout = { width: 320, height: 250, margin: { t: 0, b: 0, l: 0, r: 0 } };
 
-Plotly.newPlot(temperatureGaugeDiv, temperatureData, layout, graphConfig);
-Plotly.newPlot(humidityGaugeDiv, humidityData, layout, graphConfig);
-
-// Temperature
-let newTempXArray = [];
-let newTempYArray = [];
-// Humidity
-let newHumidityXArray = [];
-let newHumidityYArray = [];
-
-// The maximum number of data points displayed on our scatter/line graph
-let MAX_GRAPH_POINTS = 12;
-let ctr = 0;
-
-function updateBoxes(temperature, humidity) {
-  let temperatureDiv = document.getElementById("temperature");
-  let humidityDiv = document.getElementById("humidity");
+function updateBoxes(id, temperature, humidity) {
+  let temperatureDiv = document.getElementById(`temperature-${id}`);
+  let humidityDiv = document.getElementById(`humidity-${id}`);
 
   temperatureDiv.innerHTML = temperature + " C";
   humidityDiv.innerHTML = humidity + " %";
 }
 
-function updateGauge(temperature, humidity) {
+function updateGauge(id, temperature, humidity) {
+  // If current tab is not equal to the websocket message id then we ignore
+  if (currentTab !== id) return;
   var temperature_update = {
     value: temperature,
   };
   var humidity_update = {
     value: humidity,
   };
+  let temperatureGaugeDiv = document.getElementById(`temperature-gauge-${id}`);
+  let humidityGaugeDiv = document.getElementById(`humidity-gauge-${id}`);
 
   Plotly.update(temperatureGaugeDiv, temperature_update);
   Plotly.update(humidityGaugeDiv, humidity_update);
 }
 
-function updateCharts(lineChartDiv, xArray, yArray, sensorRead) {
+function updateCharts(id, lineChartDiv, xArray, yArray, sensorRead) {
+  if (currentTab !== id) return;
   var today = new Date();
-  var time =
-    today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  // var time =
+  //   today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
   if (xArray.length >= MAX_GRAPH_POINTS) {
     xArray.shift();
   }
   if (yArray.length >= MAX_GRAPH_POINTS) {
     yArray.shift();
   }
-  xArray.push(time);
+  xArray.push(ctr++);
   yArray.push(sensorRead);
 
   var data_update = {
@@ -204,27 +248,38 @@ function updateCharts(lineChartDiv, xArray, yArray, sensorRead) {
     y: [yArray],
   };
 
-  Plotly.update(lineChartDiv, data_update);
+  if (lineChartDiv === TEMPERATURE_CHART_DIV) {
+    let temperatureHistoryDiv = document.getElementById(
+      `temperature-history-${id}`
+    );
+    Plotly.update(temperatureHistoryDiv, data_update);
+  } else {
+    let humidityHistoryDiv = document.getElementById(`humidity-history-${id}`);
+    Plotly.update(humidityHistoryDiv, data_update);
+  }
 }
 
 function updateSensorReadings(jsonResponse) {
+  let id = jsonResponse.id;
   let temperature = jsonResponse.temperature.toFixed(2);
   let humidity = jsonResponse.humidity.toFixed(2);
 
-  updateBoxes(temperature, humidity);
+  updateBoxes(id, temperature, humidity);
 
-  updateGauge(temperature, humidity);
+  updateGauge(id, temperature, humidity);
 
   // Update Temperature Line Chart
   updateCharts(
-    temperatureHistoryDiv,
+    id,
+    TEMPERATURE_CHART_DIV,
     newTempXArray,
     newTempYArray,
     temperature
   );
   // Update Humidity Line Chart
   updateCharts(
-    humidityHistoryDiv,
+    id,
+    HUMIDITY_CHART_DIV,
     newHumidityXArray,
     newHumidityYArray,
     humidity
@@ -239,5 +294,6 @@ var socket = io.connect();
 //receive details from server
 socket.on("updateSensorData", function (msg) {
   var sensorReadings = JSON.parse(msg);
+  console.log(sensorReadings);
   updateSensorReadings(sensorReadings);
 });

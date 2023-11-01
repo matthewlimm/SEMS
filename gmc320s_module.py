@@ -8,15 +8,16 @@
 #   Year-Month-Day Hour:Minute:Second, CPM
 #   2017-07-21 10:52:37, 574
 
-import time                                     # time formatting and more
-import sys                                      # system functions
-import serial                                   # communication with serial port
-import serial.tools.list_ports                  # allows listing of serial ports
+# import time                                     # time formatting and more
+# import sys                                      # system functions
+# import serial                                   # communication with serial port
+# import serial.tools.list_ports                  # allows listing of serial ports
+import random
 
-# my settings
-my_port      = '/dev/ttyUSB0'                   # likely USB/Serial port on Linux
-my_baudrate  = 115200                            # GMC-320S is 115200
-ser = serial.Serial(my_port, my_baudrate)       # open serial port
+# # my settings
+# my_port      = '/dev/ttyUSB0'                   # likely USB/Serial port on Linux
+# my_baudrate  = 115200                            # GMC-320S is 115200
+# ser = serial.Serial(my_port, my_baudrate)       # open serial port
 
 class GMC320SModule:
     def __init__(self, id):
@@ -37,6 +38,7 @@ class GMC320SModule:
             return ord(rec[0])<< 8 | ord(rec[1])
 
         while True:
-            cpm = getCPM(ser)  
-            print("CPM:", cpm)
-            return cpm
+            # cpm = getCPM(ser)  
+            # print("CPM:", cpm)
+            #return cpm
+            return random.randint(1,100)
