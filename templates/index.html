@@ -30,7 +30,7 @@
       <!-- Fixed navbar -->
       <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">DonskyTech</a>
+          <a class="navbar-brand" href="#">S.E.M.S</a>
           <button
             class="navbar-toggler"
             type="button"
@@ -57,32 +57,13 @@
     </header>
     <div class="container-fluid content mt-5">
       <div class="row">
-        <nav
-          id="sidebarMenu"
-          class="col-md-3 col-lg-2 d-md-block sidebar collapse"
-        >
-          <div class="sidebar position-sticky pt-3 sidebar-sticky">
-            <ul class="nav flex-column">
-              <li class="nav-item">
-                <a
-                  class="nav-link active link-danger"
-                  aria-current="page"
-                  href="#"
-                >
-                  <span class="material-symbols-outlined"> dashboard </span>
-                  Dashboard
-                </a>
-              </li>
-            </ul>
-          </div>
-        </nav>
-        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="col-md-12 ms-sm-auto col-lg-12 px-md-4">
           <div class="row">
             <div
-              class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom border-danger"
+              class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
             >
-              <h1 class="h2 text-danger">
-                sensor22/sensor11 Weather Station Dashboard
+              <h1 class="h2" style="color:#8B0000">
+                Smart Environmental Monitoring System Dashboard
               </h1>
             </div>
           </div>
@@ -98,7 +79,7 @@
                   class="box d-flex rounded-3 p-2 shadow align-items-center justify-content-center"
                 >
                   <div class="right-side">
-                    <div class="box-topic">Temperature</div>
+                    <div class="box-topic">{{sensor.get_name()[0]}}</div>
                     <div class="number" id="temperature-{{sensor.get_id()}}">
                       0 C
                     </div>
@@ -111,7 +92,7 @@
                   class="box d-flex align-items-center justify-content-center rounded-3 p-1 shadow"
                 >
                   <div class="right-side">
-                    <div class="box-topic">Humidity</div>
+                    <div class="box-topic">{{sensor.get_name()[1]}}</div>
                     <div class="number" id="humidity-{{sensor.get_id()}}">0%</div>
                   </div>
                   <span class="indicator material-symbols-outlined">
@@ -183,7 +164,7 @@
     </div>
     <footer class="footer mt-auto py-3 bg-dark">
       <div class="container text-center">
-        <span class="text-white">&copy;2023 www.donskytech.com</span>
+        <span class="text-white">&copy; 2023 Alpha Theta Pledge Class</span>
       </div>
     </footer>
     <script

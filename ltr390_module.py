@@ -19,13 +19,16 @@ class LTR390Module:
 
     def get_id(self):
         return self.id
+    
+    def get_name(self):
+        return "UV", "Lux"
 
     def get_sensor_readings(self):
         while True:
             try:
                 # print("UV:", ltr.uvs, "\t\tLux:", ltr.lux)
                 #return ltr.uvs, ltr.lux
-                return random.randint(1,100), random.randint(1,100)
+                return random.randint(100,200), random.randint(100,200)
             except RuntimeError as error:
                 # Errors happen fairly often, DHT's are hard to read, just keep going
                 print(error.args[0])

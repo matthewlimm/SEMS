@@ -12,6 +12,9 @@ class DHT22Module:
 
     def get_id(self):
         return self.id
+    
+    def get_name(self):
+        return "Temperature", "Humidity"
 
     def get_sensor_readings(self):
         while True:

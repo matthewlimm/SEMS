@@ -25,6 +25,9 @@ class MQ135Module:
     def get_id(self):
         return self.id
     
+    def get_name(self):
+        return "AQI", "APL"
+    
     def get_sensor_readings(self):
         def _range(x, in_min, in_max, out_min, out_max):
             return int((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
@@ -33,5 +36,18 @@ class MQ135Module:
             # Test your module, then define the value range - in this case between 0 and 60000.
             # sensorValue = _range(channel_0.value, 0, 60000, 0, 1023)
             # print("AQI:", sensorValue)
-            #return sensorValue
-            return random.randint(1,100)
+            # APL = ""
+            # if (sensorValue > 0 & sensorValue <= 50):
+            #     APL = 0
+            # elif (sensorValue >= 51 & sensorValue <= 100):
+            #     APL = 1
+            # elif (sensorValue >= 101 & sensorValue <= 150):
+            #     APL = 2
+            # elif (sensorValue >= 151 & sensorValue <= 200):
+            #     APL = 3
+            # elif (sensorValue >= 201 & sensorValue <= 300):
+            #     APL = 4
+            # else: 
+            #     APL = 5
+            #return sensorValue, APL
+            return random.randint(0,5), random.randint(0, 5)

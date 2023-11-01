@@ -14,11 +14,11 @@ import random
 import csv
 
 dht22_module = DHT22Module(1) # temperature and humidity
-gmc320s_module = GMC320SModule(2) # radiation
-ltr390_module = LTR390Module(3) # uv, lux
+ltr390_module = LTR390Module(2) # uv, lux
+gmc320s_module = GMC320SModule(3) # radiation
 mq135_module = MQ135Module(4) # aqi
 
-sensor_modules = [dht22_module, gmc320s_module, ltr390_module, mq135_module]
+sensor_modules = [dht22_module, ltr390_module, gmc320s_module, mq135_module]
 # https://learn.adafruit.com/raspberry-pi-iot-dashboard-with-azure-and-circuitpython
 
 thread = None
@@ -44,10 +44,10 @@ def background_thread():
             print(temperature, humidity)
             uv, lux = ltr390_module.get_sensor_readings() or (None, None)
             print(uv, lux)
-            cpm = gmc320s_module.get_sensor_readings() or (None, None)
+            cpm = gmc320s_module.get_sensor_readings() or (None)
             print(cpm)
-            aqi = mq135_module.get_sensor_readings() or (None, None)
-            print(aqi)
+            aqi, apl = mq135_module.get_sensor_readings() or (None, None)
+            print(aqi, apl)
 
             now = datetime.datetime.now()
             data = str(now.time()) + "," + str(temperature) + "," + str(humidity) + "," + str(uv) + "," + str(lux) + "," + str(cpm) + "," + str(aqi)
@@ -57,36 +57,19 @@ def background_thread():
             finally:
                 csv.close()
 
-            if temperature is not None or humidity is not None:
+            if temperature is not None or humidity is not None or uv is not None or lux is not None or cpm is not None or aqi is not None or apl is not None:
                 sensor_readings = {
                     "id": sensor.get_id(),
                     "temperature": temperature,
                     "humidity": humidity,
-                }
-                socketio.emit("updateSensorData", json.dumps(sensor_readings))
-                socketio.sleep(.1)
-            if uv is not None or lux is not None:
-                sensor_readings = {
-                    "id": sensor.get_id(),
                     "uv": uv,
                     "lux": lux,
-                }
-                socketio.emit("updateSensorData", json.dumps(sensor_readings))
-                socketio.sleep(.1)
-            if cpm is not None:
-                sensor_readings = {
-                    "id": sensor.get_id(),
                     "cpm": cpm,
-                }
-                socketio.emit("updateSensorData", json.dumps(sensor_readings))
-                socketio.sleep(.1)
-            if aqi is not None:
-                sensor_readings = {
-                    "id": sensor.get_id(),
                     "aqi": aqi,
+                    "apl": apl,
                 }
                 socketio.emit("updateSensorData", json.dumps(sensor_readings))
-                socketio.sleep(.1)
+                socketio.sleep(.5)
 
 """
 Serve root index file
