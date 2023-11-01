@@ -13,6 +13,12 @@ ltr = adafruit_ltr390.LTR390(i2c)
 # lux - The calculated Lux ambient light value
 
 class LTR390Module:
+    def __init__(self, id):
+        self.id = id
+
+    def get_id(self):
+        return self.id
+
     def get_sensor_readings(self):
         while True:
             try:

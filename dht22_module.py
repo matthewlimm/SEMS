@@ -1,9 +1,16 @@
 import adafruit_dht
 import time
+import board
+
+pin = board.D4
 
 class DHT22Module:
-    def __init__(self, pin):
+    def __init__(self, id):
+        self.id = id
         self.dht_device = adafruit_dht.DHT22(pin)
+
+    def get_id(self):
+        return self.id
 
     def get_sensor_readings(self):
         while True:

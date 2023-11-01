@@ -19,6 +19,12 @@ my_baudrate  = 115200                            # GMC-320S is 115200
 ser = serial.Serial(my_port, my_baudrate)       # open serial port
 
 class GMC320SModule:
+    def __init__(self, id):
+        self.id = id
+
+    def get_id(self):
+        return self.id
+
     def get_sensor_readings(self):
         def getCPM(ser):                                # get CPM from device
             ser.write(b'<GETCPM>>')

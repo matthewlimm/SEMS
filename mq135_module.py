@@ -18,6 +18,12 @@ mcp = MCP.MCP3008(spi, cs)
 channel_0 = AnalogIn(mcp, MCP.P0)
 
 class MQ135Module:
+    def __init__(self, id):
+        self.id = id
+
+    def get_id(self):
+        return self.id
+    
     def get_sensor_readings(self):
         def _range(x, in_min, in_max, out_min, out_max):
             return int((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)

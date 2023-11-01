@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SEMS Dashboard</title>
+    <title>DHT22 Weather Station Project</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -18,10 +18,7 @@
       src="https://cdn.plot.ly/plotly-2.20.0.min.js"
       charset="utf-8"
     ></script>
-    <link
-      href="{{url_for('static', filename = 'index.css')}}"
-      rel="stylesheet"
-    />
+    <link href="../static/index.css" rel="stylesheet" />
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"
       integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ=="
@@ -33,7 +30,7 @@
       <!-- Fixed navbar -->
       <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">Alpha Theta Pledge Class</a>
+          <a class="navbar-brand" href="#">DonskyTech</a>
           <button
             class="navbar-toggler"
             type="button"
@@ -60,7 +57,7 @@
     </header>
     <div class="container-fluid content mt-5">
       <div class="row">
-        <!-- <nav
+        <nav
           id="sidebarMenu"
           class="col-md-3 col-lg-2 d-md-block sidebar collapse"
         >
@@ -78,69 +75,106 @@
               </li>
             </ul>
           </div>
-        </nav> -->
-        <div class="ms-sm-auto px-md-4">
+        </nav>
+        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
           <div class="row">
             <div
               class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom border-danger"
             >
-              <h1 class="h2 text-danger">SEMS Dashboard</h1>
-              <div class="row"></div>
+              <h1 class="h2 text-danger">
+                DHT22/DHT11 Weather Station Dashboard
+              </h1>
             </div>
           </div>
           <div class="row">
-            <div
-              class="d-flex p-2 justify-content-evenly overview-boxes justify-content-center"
-            >
+            {%for sensor in sensor_modules%}
+
+            <div class="col">
               <div
-                class="box d-flex align-items-center justify-content-center rounded-3 p-1 shadow"
+                class="readings align-items-center justify-content-center border rounded-2 p-4"
               >
-                <div class="right-side">
-                  <div class="box-topic">Temperature</div>
-                  <div class="number" id="temperature">35 C</div>
-                </div>
-                <span class="indicator material-symbols-outlined"
-                  >device_thermostat</span
+                <h3>DHT22/DHT11 #{{sensor.get_id()}}</h3>
+                <div
+                  class="box d-flex rounded-3 p-2 shadow align-items-center justify-content-center"
                 >
-              </div>
-              <div
-                class="box d-flex align-items-center justify-content-center rounded-3 p-1 shadow"
-              >
-                <div class="right-side">
-                  <div class="box-topic">Humidity</div>
-                  <div class="number" id="humidity">40%</div>
+                  <div class="right-side">
+                    <div class="box-topic">Temperature</div>
+                    <div class="number" id="temperature-{{dht.get_id()}}">
+                      0 C
+                    </div>
+                  </div>
+                  <span class="indicator material-symbols-outlined"
+                    >device_thermostat</span
+                  >
                 </div>
-                <span class="indicator material-symbols-outlined">
-                  humidity_percentage
-                </span>
+                <div
+                  class="box d-flex align-items-center justify-content-center rounded-3 p-1 shadow"
+                >
+                  <div class="right-side">
+                    <div class="box-topic">Humidity</div>
+                    <div class="number" id="humidity-{{dht.get_id()}}">0%</div>
+                  </div>
+                  <span class="indicator material-symbols-outlined">
+                    humidity_percentage
+                  </span>
+                </div>
               </div>
             </div>
+            {%endfor%}
           </div>
-          <div class="row">
-            <div class="col-md-12 col-lg-8 bg-white align-items-center">
-              <div class="p-3 border-top border-3 border-danger">
-                <div class="row mt-3 gx-5">
-                  <div class="col-md-12 col-lg-6 history-divs">
-                    <div id="temperature-history"></div>
-                  </div>
-                  <div class="col-md-12 col-lg-6 history-divs">
-                    <div id="humidity-history"></div>
+          <div class="row mt-2">
+            <div class="col">
+              <ul class="nav nav-tabs" id="myTab" role="tablist">
+                {%for sensor in sensor_modules%}
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link {% if loop.index == 1 %}active{%endif%}"
+                    id="dht-tab-{{dht.get_id()}}"
+                    data-bs-toggle="tab"
+                    data-bs-target="#dht-{{dht.get_id()}}"
+                    data-tab-number="{{loop.index}}"
+                    type="button"
+                    role="tab"
+                    aria-controls="dht-{{dht.get_id()}}"
+                    aria-selected="true"
+                  >
+                    DHT #{{sensor.get_id()}}
+                  </button>
+                </li>
+                {%endfor%}
+              </ul>
+              <div class="tab-content">
+                {%for sensor in sensor_modules%}
+
+                <div
+                  class="tab-pane {% if loop.index == 1 %}active{%endif%}"
+                  id="dht-{{dht.get_id()}}"
+                  role="tabpanel"
+                  aria-labelledby="dht-tab-{{dht.get_id()}}"
+                  tabindex="{{loop.index}}"
+                >
+                  <div
+                    class="graphs d-flex flex-wrap bg-white justify-content-evenly p-5"
+                  >
+                    <div class="history-divs">
+                      <div id="temperature-history-{{dht.get_id()}}"></div>
+                    </div>
+                    <div class="historical-charts">
+                      <div class="history-divs">
+                        <div id="humidity-history-{{dht.get_id()}}"></div>
+                      </div>
+                    </div>
+                    <div class="d-flex flex-column gauge-charts">
+                      <div class="">
+                        <div id="temperature-gauge-{{dht.get_id()}}"></div>
+                      </div>
+                      <div class="">
+                        <div id="humidity-gauge-{{dht.get_id()}}"></div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div
-              class="col-md-12 col-lg-4 bg-white d-flex flex-column align-items-center"
-            >
-              <div
-                class="row p-3 bg-light border-top border-3 border-danger bg-white"
-              >
-                <div id="temperature-gauge"></div>
-              </div>
-              <div
-                class="row p-3 bg-light border-top border-3 border-danger mt-4 bg-white"
-              >
-                <div id="humidity-gauge" class=""></div>
+                {%endfor%}
               </div>
             </div>
           </div>
@@ -149,7 +183,7 @@
     </div>
     <footer class="footer mt-auto py-3 bg-dark">
       <div class="container text-center">
-        <span class="text-white">&copy; 2025 Alpha Theta Pledge Class</span>
+        <span class="text-white">&copy;2023 www.donskytech.com</span>
       </div>
     </footer>
     <script
@@ -157,9 +191,12 @@
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
       crossorigin="anonymous"
     ></script>
-    <script
-      type="text/javascript"
-      src="{{ url_for('static', filename = 'index.js') }}"
-    ></script>
+    <script type="text/javascript" src="../static/index.js"></script>
+    <input
+      id="dhtCount"
+      type="text"
+      type="hidden"
+      value="{{'0' if sensor_modules == None else sensor_modules|length}}"
+    />
   </body>
 </html>
