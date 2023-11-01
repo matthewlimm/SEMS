@@ -16,15 +16,12 @@ class LTR390Module:
     def get_sensor_readings(self):
         while True:
             try:
-                print("UV:", ltr.uvs, "\t\tAmbient Light:", ltr.light)
-                print("UV Index:", ltr.uvi, "\t\tLux:", ltr.lux)
-                return ltr.lux 
-
+                print("UV:", ltr.uvs, "\t\tLux:", ltr.lux)
+                return ltr.uvs, ltr.lux
             except RuntimeError as error:
                 # Errors happen fairly often, DHT's are hard to read, just keep going
                 print(error.args[0])
                 time.sleep(2.0)
                 continue
             except Exception as error:
-                self.dht_device.exit()
                 raise error

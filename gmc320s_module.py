@@ -32,4 +32,5 @@ class GMC320SModule:
 
         while True:
             cpm = getCPM(ser)  
+            print("CPM:", cpm)
             return cpm

@@ -4,17 +4,18 @@ from flask_socketio import SocketIO
 from random import random
 from threading import Lock
 from datetime import datetime
-#from dht22_module import DHT22Module
-#from gmc320s_module import GMC320SModule
-#from mics5524_module import MICS5524Module
-#from ltr390_module import LTR390Module
+from dht22_module import DHT22Module
+from gmc320s_module import GMC320SModule
+from ltr390_module import LTR390Module
+from mq135_module import MQ135Module
 import board
 import time
+import random
 
-#dht22_module = DHT22Module(board.D4) # temperature and humidity
-#gmc320s_module = GMC320SModule() # radiation
-#mics5524_module = MICS5524Module() # gas 
-#ltr390_module = LTR390Module() # uv, lux, etc.
+dht22_module = DHT22Module(board.D4) # temperature and humidity
+ltr390_module = LTR390Module() # uv, lux, etc.
+gmc320s_module = GMC320SModule() # radiation
+mq135_module = MQ135Module() # gas
 
 # modules = [dht22_module, gmc320s_module]
 # https://learn.adafruit.com/raspberry-pi-iot-dashboard-with-azure-and-circuitpython
@@ -33,15 +34,12 @@ def background_thread():
     while True:
         #for module in modules:
         ts  = time.strftime("%l:%M:%S")
-        #temperature, humidity = dht22_module.get_sensor_readings()
-        #cpm = gmc320s_module.get_sensor_readings()
-        #co2 = mics5524_module.get_sensor_readings()
-        #lux = ltr390_module.get_sensor_readings()
+        temperature, humidity = dht22_module.get_sensor_readings()
+        uv, lux = ltr390_module.get_sensor_readings()
+        cpm = gmc320s_module.get_sensor_readings()
         sensor_readings = {
-            #"id": module.get_id(),
-            "temperature": 0,
-            "humidity": 0,
-            #"cpm": cpm,
+            "temperature": cpm,
+            "humidity": 69,
         }
         sensor_json = json.dumps(sensor_readings)
         socketio.emit("updateSensorData", sensor_json)
