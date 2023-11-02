@@ -1,12 +1,12 @@
-import adafruit_dht
-import time
-import board
-import busio
-import adafruit_ltr390
+# import adafruit_dht
+# import time
+# import board
+# import busio
+# import adafruit_ltr390
 import random
 
-i2c = busio.I2C(board.SCL, board.SDA)
-ltr = adafruit_ltr390.LTR390(i2c)
+# i2c = busio.I2C(board.SCL, board.SDA)
+# ltr = adafruit_ltr390.LTR390(i2c)
 
 # uvs - The raw UV light measurement
 # light - The raw ambient light measurement
@@ -24,14 +24,14 @@ class LTR390Module:
         return "UV", "Lux"
 
     def get_unit(self):
-        return "nm", "lx"
+        return "emoji_objects", "lightbulb"
 
     def get_sensor_readings(self):
         while True:
             try:
                 # print("UV:", ltr.uvs, "\t\tLux:", ltr.lux)
-                return ltr.uvs, ltr.lux
-                #return random.randint(100,200), random.randint(100,200)
+                # return ltr.uvs, ltr.lux
+                return random.randint(100,200), random.randint(100,200)
             except RuntimeError as error:
                 # Errors happen fairly often, DHT's are hard to read, just keep going
                 print(error.args[0])

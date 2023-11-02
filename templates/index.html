@@ -85,7 +85,7 @@
                     </div>
                   </div>
                   <span class="indicator material-symbols-outlined"
-                    >device_thermostat</span
+                    >{{sensor.get_unit()[0]}}</span
                   >
                 </div>
                 <div
@@ -96,7 +96,7 @@
                     <div class="number" id="humidity-{{sensor.get_id()}}">Initializing...</div>
                   </div>
                   <span class="indicator material-symbols-outlined">
-                    humidity_percentage
+                    {{sensor.get_unit()[1]}}
                   </span>
                 </div>
               </div>
