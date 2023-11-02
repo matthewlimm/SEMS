@@ -209,8 +209,19 @@ function updateBoxes(id, temperature, humidity) {
   let temperatureDiv = document.getElementById(`temperature-${id}`);
   let humidityDiv = document.getElementById(`humidity-${id}`);
 
-  temperatureDiv.innerHTML = temperature + " C";
-  humidityDiv.innerHTML = humidity + " %";
+  if (id === 1) {
+    temperatureDiv.innerHTML = temperature + " C";
+    humidityDiv.innerHTML = humidity + " %";
+  } else if (id === 2) {
+    temperatureDiv.innerHTML = temperature + " nm";
+    humidityDiv.innerHTML = humidity + " lx";
+  } else if (id === 3) {
+    temperatureDiv.innerHTML = temperature + " cpm";
+    humidityDiv.innerHTML = humidity + " usv";
+  } else {
+    temperatureDiv.innerHTML = temperature + " aqi";
+    humidityDiv.innerHTML = humidity + " apl";
+  }
 }
 
 function updateGauge(id, temperature, humidity) {

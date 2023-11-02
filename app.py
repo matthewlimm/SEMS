@@ -51,6 +51,7 @@ def background_thread():
 
             now = datetime.datetime.now()
             data = str(now.time()) + "," + str(temperature) + "," + str(humidity) + "," + str(uv) + "," + str(lux) + "," + str(cpm) + "," + str(aqi) + "," + str(apl)
+            print(data)
             csv = open(filename, 'a')
             try:
                 csv.write(data+'\n')
@@ -69,7 +70,7 @@ def background_thread():
                 "apl": apl
             }
             socketio.emit("updateSensorData", json.dumps(sensor_readings))
-            socketio.sleep(.1)
+            socketio.sleep(1)
 
 """
 Serve root index file
