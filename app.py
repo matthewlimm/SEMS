@@ -34,59 +34,42 @@ Background Thread
 def background_thread():
     filename = "data.csv"
     csv = open(filename, 'w')
-    csv.write('date,temperature,humidity,uv,lux,cpm,aqi\n')
+    csv.write('date,temperature,humidity,uv,lux,cpm,aqi,apl\n')
     csv.close
 
     while True:
         for sensor in sensor_modules:
             # Scan through all DHT sensor connected to our raspberry pi
             temperature, humidity = dht22_module.get_sensor_readings() or (None, None)
-            print(temperature, humidity)
+            #print(temperature, humidity)
             uv, lux = ltr390_module.get_sensor_readings() or (None, None)
-            print(uv, lux)
-            cpm = gmc320s_module.get_sensor_readings() or (None)
-            print(cpm)
+            #print(uv, lux)
+            cpm, uSv = gmc320s_module.get_sensor_readings() or (None, None)
+            #print(cpm)
             aqi, apl = mq135_module.get_sensor_readings() or (None, None)
-            print(aqi, apl)
+            #print(aqi, apl)
 
             now = datetime.datetime.now()
-            data = str(now.time()) + "," + str(temperature) + "," + str(humidity) + "," + str(uv) + "," + str(lux) + "," + str(cpm) + "," + str(aqi)
+            data = str(now.time()) + "," + str(temperature) + "," + str(humidity) + "," + str(uv) + "," + str(lux) + "," + str(cpm) + "," + str(aqi) + "," + str(apl)
             csv = open(filename, 'a')
             try:
                 csv.write(data+'\n')
             finally:
                 csv.close()
 
-            if temperature is not None or humidity is not None:
-                sensor_readings = {
-                    "id": sensor.get_id(),
-                    "temperature": temperature,
-                    "humidity": humidity,
-                }
-                socketio.emit("updateSensorData", json.dumps(sensor_readings))
-                socketio.sleep(.1)
-            if uv is not None or lux is not None:
-                sensor_readings = {
-                    "id": sensor.get_id(),
-                    "uv": uv,
-                    "lux": lux,
-                }
-                socketio.emit("updateSensorData", json.dumps(sensor_readings))
-                socketio.sleep(.1)
-            if cpm is not None:
-                sensor_readings = {
-                    "id": sensor.get_id(),
-                    "cpm": cpm,
-                }
-                socketio.emit("updateSensorData", json.dumps(sensor_readings))
-                socketio.sleep(.1)
-            if aqi is not None or apl is not None:
-                sensor_readings = {
-                    "id": sensor.get_id(),
-                    "aqi": aqi,
-                }
-                socketio.emit("updateSensorData", json.dumps(sensor_readings))
-                socketio.sleep(.1)
+            sensor_readings = {
+                "id": sensor.get_id(),
+                "temperature": temperature,
+                "humidity": humidity,
+                "uv": uv,
+                "lux": lux,
+                "cpm": cpm,
+                "uSv": uSv,
+                "aqi": aqi,
+                "apl": apl
+            }
+            socketio.emit("updateSensorData", json.dumps(sensor_readings))
+            socketio.sleep(.1)
 
 """
 Serve root index file
@@ -95,7 +78,6 @@ Serve root index file
 @app.route("/")
 def index():
     return render_template("index.html", sensor_modules=sensor_modules)
-
 
 """
 Decorator for connect

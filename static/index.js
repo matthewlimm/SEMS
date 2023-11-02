@@ -258,19 +258,30 @@ function updateCharts(id, lineChartDiv, xArray, yArray, sensorRead) {
     Plotly.update(humidityHistoryDiv, data_update);
   }
 }
-
+//csv.write('date,temperature,humidity,uv,lux,cpm,aqi,apl\n')
 function updateSensorReadings(jsonResponse) {
-  let id = jsonResponse.id;
+
   let temperature = jsonResponse.temperature.toFixed(2);
   let humidity = jsonResponse.humidity.toFixed(2);
+  let uv = jsonResponse.uv.toFixed(2);
+  let lux = jsonResponse.lux.toFixed(2);
+  let cpm = jsonResponse.cpm.toFixed(2);
+  let uSv = jsonResponse.uSv.toFixed(2);
+  let aqi = jsonResponse.aqi.toFixed(2);
+  let apl = jsonResponse.apl.toFixed(2);
 
-  updateBoxes(id, temperature, humidity);
-
-  updateGauge(id, temperature, humidity);
+  updateBoxes(1, temperature, humidity);
+  updateGauge(1, temperature, humidity);
+  updateBoxes(2, uv, lux);
+  updateGauge(2, uv, lux);
+  updateBoxes(3, cpm, uSv);
+  updateGauge(3, cpm, uSv);
+  updateBoxes(4, aqi, apl);
+  updateGauge(4, aqi, apl);
 
   // Update Temperature Line Chart
   updateCharts(
-    id,
+    1,
     TEMPERATURE_CHART_DIV,
     newTempXArray,
     newTempYArray,
@@ -278,11 +289,62 @@ function updateSensorReadings(jsonResponse) {
   );
   // Update Humidity Line Chart
   updateCharts(
-    id,
+    1,
     HUMIDITY_CHART_DIV,
     newHumidityXArray,
     newHumidityYArray,
     humidity
+  );
+
+  // Update Temperature Line Chart
+  updateCharts(
+    2,
+    TEMPERATURE_CHART_DIV,
+    newTempXArray,
+    newTempYArray,
+    uv
+  );
+  // Update Humidity Line Chart
+  updateCharts(
+    2,
+    HUMIDITY_CHART_DIV,
+    newHumidityXArray,
+    newHumidityYArray,
+    lux
+  );
+
+  // Update Temperature Line Chart
+  updateCharts(
+    3,
+    TEMPERATURE_CHART_DIV,
+    newTempXArray,
+    newTempYArray,
+    cpm
+  );
+  // Update Humidity Line Chart
+  updateCharts(
+    3,
+    HUMIDITY_CHART_DIV,
+    newHumidityXArray,
+    newHumidityYArray,
+    uSv
+  );
+
+  // Update Temperature Line Chart
+  updateCharts(
+    4,
+    TEMPERATURE_CHART_DIV,
+    newTempXArray,
+    newTempYArray,
+    aqi
+  );
+  // Update Humidity Line Chart
+  updateCharts(
+    4,
+    HUMIDITY_CHART_DIV,
+    newHumidityXArray,
+    newHumidityYArray,
+    apl
   );
 }
 /*
@@ -294,6 +356,6 @@ var socket = io.connect();
 //receive details from server
 socket.on("updateSensorData", function (msg) {
   var sensorReadings = JSON.parse(msg);
-  console.log(sensorReadings);
+  //console.log(sensorReadings);
   updateSensorReadings(sensorReadings);
 });
