@@ -27,7 +27,7 @@ class GMC320SModule:
         return self.id
     
     def get_name(self):
-        return "CPM", ""
+        return "CPM", "uSv"
 
     def get_sensor_readings(self):
         def getCPM(ser):                                # get CPM from device
@@ -42,6 +42,7 @@ class GMC320SModule:
 
         while True:
             # cpm = getCPM(ser)  
+            #usv = cpm * 0.00812
             # print("CPM:", cpm)
-            #return cpm
-            return random.randint(300,400)
+            #return cpm, usv
+            return random.randint(300,400), random.randint(300,400)
