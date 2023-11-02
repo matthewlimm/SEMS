@@ -34,7 +34,7 @@ Background Thread
 def background_thread():
     filename = "data.csv"
     csv = open(filename, 'w')
-    csv.write('date,temperature,humidity,uv,lux,cpm,aqi\n')
+    csv.write('date,temperature,humidity,uv,lux,cpm,aqi,apl\n')
     csv.close
 
     while True:
@@ -50,7 +50,7 @@ def background_thread():
             #print(aqi, apl)
 
             now = datetime.datetime.now()
-            data = str(now.time()) + "," + str(temperature) + "," + str(humidity) + "," + str(uv) + "," + str(lux) + "," + str(cpm) + "," + str(aqi)
+            data = str(now.time()) + "," + str(temperature) + "," + str(humidity) + "," + str(uv) + "," + str(lux) + "," + str(cpm) + "," + str(aqi) + "," + str(apl)
             csv = open(filename, 'a')
             try:
                 csv.write(data+'\n')
@@ -78,7 +78,6 @@ Serve root index file
 @app.route("/")
 def index():
     return render_template("index.html", sensor_modules=sensor_modules)
-
 
 """
 Decorator for connect
