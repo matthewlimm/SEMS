@@ -210,7 +210,7 @@ function updateBoxes(id, temperature, humidity) {
   let humidityDiv = document.getElementById(`humidity-${id}`);
 
   if (id === 1) {
-    temperatureDiv.innerHTML = temperature + " C";
+    temperatureDiv.innerHTML = temperature + " c";
     humidityDiv.innerHTML = humidity + " %";
   } else if (id === 2) {
     temperatureDiv.innerHTML = temperature + " nm";
