@@ -6,10 +6,12 @@ A multi-modular environmental sensor project using Python, Flask, Flask-SocketIO
 ## Writeup
 https://abhinavballa.github.io/SEMSweb/
 
-## Prerequisites
+## Installation
+
+### Prerequisites
 Make sure to install the necessary drivers on your Raspberry Pi.
   
-## Steps on how to run on Raspberry Pi
+### Steps on how to run on Raspberry Pi
 1. Clone the repository
 ```
 git clone https://github.com/matthewlimm/SEMS
