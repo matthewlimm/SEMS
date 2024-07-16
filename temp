@@ -1,15 +1,65 @@
-import Adafruit_DHT  # Import the Adafruit DHT library (make sure to install it first)
+import time
+import Adafruit_DHT
+import Adafruit_TSL2561
+import paho.mqtt.client as mqtt
 
-# Set up the sensor type and GPIO pin
-sensor = Adafruit_DHT.DHT22  # Replace with DHT11 if using that sensor
-pin = 4  # Replace with the actual GPIO pin number connected to the sensor
+# MQTT broker configuration
+mqtt_broker = "broker.example.com"  # Replace with your MQTT broker address
+mqtt_port = 1883  # Default MQTT port
+mqtt_topic_temp = "sensors/temperature"
+mqtt_topic_humidity = "sensors/humidity"
+mqtt_topic_light = "sensors/light"
 
-# Try to read the sensor data
-humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
+# Initialize MQTT client
+client = mqtt.Client()
 
-# Check if data was successfully retrieved
-if humidity is not None and temperature is not None:
-    print(f'Temperature: {temperature:.2f} °C')
-    print(f'Humidity: {humidity:.2f} %')
-else:
-    print('Failed to retrieve sensor data. Check wiring and sensor connection.')
+# Connect to MQTT broker
+client.connect(mqtt_broker, mqtt_port, 60)
+
+# Initialize DHT sensor (DHT22)
+dht_sensor = Adafruit_DHT.DHT22
+dht_pin = 4  # GPIO pin for DHT sensor
+
+# Initialize TSL2561 light sensor
+tsl = Adafruit_TSL2561.TSL2561()  # Default address 0x39 (address 0x29 if ADDR pin is grounded)
+
+# Enable the light sensor
+tsl.enable_auto_gain(True)
+tsl.enable_auto_time(True)
+
+def read_temperature_and_humidity():
+    humidity, temperature = Adafruit_DHT.read_retry(dht_sensor, dht_pin)
+    return humidity, temperature
+
+def read_light():
+    full_spectrum, infrared = tsl.get_full_luminosity()
+    visible = full_spectrum - infrared
+    return visible
+
+try:
+    while True:
+        # Read temperature and humidity
+        humidity, temperature = read_temperature_and_humidity()
+        
+        if humidity is not None and temperature is not None:
+            # Publish temperature and humidity to MQTT broker
+            client.publish(mqtt_topic_temp, f"{temperature:.2f}")
+            client.publish(mqtt_topic_humidity, f"{humidity:.2f}")
+            print(f"Temperature: {temperature:.2f} °C, Humidity: {humidity:.2f} %")
+        else:
+            print("Failed to retrieve temperature and humidity data.")
+        
+        # Read light intensity
+        light = read_light()
+        
+        # Publish light intensity to MQTT broker
+        client.publish(mqtt_topic_light, f"{light}")
+        print(f"Light intensity: {light} lux")
+        
+        # Wait before taking the next reading (adjust interval as needed)
+        time.sleep(10)  # 10 seconds interval
+        
+except KeyboardInterrupt:
+    print("Interrupted. Cleaning up...")
+    client.disconnect()
+    tsl.disable()
